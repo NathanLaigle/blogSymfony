@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}New post
+{% endblock %}
+
+{% block body %}
+	{{ form_start(form)}}
+	{{ form_row(form.title) }}
+	{{ form_row(form.content) }}
+	{{ form_row(form.image) }}
+	<button type="submit" class="text-sm text-white bg-gray-800 rounded-lg p-2">sub</button>
+	{{ form_end(form)}}
+{% endblock %}

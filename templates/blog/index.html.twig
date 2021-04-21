@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Blog
+{% endblock %}
+
+{% block body %}
+	<h1 class="text-3xl">Blog</h1>
+	<div class="grid grid-cols-2 md:grid-cols-3 gap-12 mt-4">
+		{% for post in posts %}
+			<div class="w-full p-4 rounded-lg grid gap-4 hover:shadow-md">
+				<div class="flex justify-center items-center mb-2">
+					<div class="h-60 w-full rounded-lg bg-gray-200" style="background : url('{{ asset('uploads/images/'~ post.image)}}') center center / cover"></div>
+				</div>
+				<h1 class="text-xl">{{post.title}}</h1>
+				<p class="text-xs text-gray-500">{{post.content|striptags|slice(0,100)}}...</p>
+				<div class="flex justify-between items-end">
+					<a href="{{ path('blog_show', {id : post.id})}}" class="text-gray-800 hover:text-gray-900">
+						Read more
+					</a>
+					<p class="text-xs text-gray-500">{{post.createdAt|format_datetime(locale='fr')}}</p>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}
