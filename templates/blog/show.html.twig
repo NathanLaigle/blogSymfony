@@ -4,8 +4,14 @@
 {% endblock %}
 
 {% block body %}
+	{% for message in app.flashes('success') %}
+		<div class="flex justify-center items-center p-8 bg-gray-100">
+			{{message}}
+		</div>
+	{% endfor %}
 	<div class="w-full p-4 rounded-lg grid gap-4 px-32">
 		<h1 class="text-3xl">{{post.title}}</h1>
+		<p class="text-xs text-gray-500">{{post.category.title}}</p>
 		<p class="text-xs text-gray-500">{{post.createdAt|format_datetime(locale='fr')}}</p>
 		<div class="flex justify-center items-center my-8">
 			<div class="h-80 w-full rounded-lg bg-gray-200" style="background : url('{{ asset('uploads/images/'~ post.image)}}') center center / cover"></div>
@@ -13,6 +19,25 @@
 		<p class="text-xs text-gray-500">{{post.content|striptags}}</p>
 		<div class="flex justify-between items-end">
 			<p class="text-xs text-gray-500">{{post.createdAt|format_datetime(locale='fr')}}</p>
+		</div>
+		<a href="{{ path('edit_pdf', { 'id' : post.id}) }}" target="_blank">
+			<button class="bg-gray-700 text-white rounded-lg p-2">Download (pdf)</button>
+		</a>
+		<h1 class="text-3xl">Comments</h1>
+		{% for comment in post.comments %}
+			<div class="grid gap-4 my-2 py-2 border-b">
+				<h1>{{ comment.author }}</h1>
+				<p class="text-xs">{{ comment.content }}</p>
+				<p class="text-xs text-gray-500">{{ comment.createAt|format_datetime(locale='fr') }}</p>
+			</div>
+		{% endfor %}
+		<h1 class="text-3xl">Leave a comment</h1>
+		<div>
+			{{ form_start(form)}}
+			{{ form_row(form.author) }}
+			{{ form_row(form.content) }}
+			<button type="submit" class="text-sm text-white bg-gray-800 rounded-lg p-2">sub</button>
+			{{ form_end(form)}}
 		</div>
 	</div>
 {% endblock %}

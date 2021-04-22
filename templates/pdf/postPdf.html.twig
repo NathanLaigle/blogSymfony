@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>{{ post.title }}</title>
+	</head>
+	<body>
+		<div class="w-full p-4 rounded-lg grid gap-4 px-32">
+			<h1>{{post.title}}</h1>
+			<p>{{post.category.title}}</p>
+			<p>{{post.createdAt|format_datetime(locale='fr')}}</p>
+			<p>{{post.content|striptags}}</p>
+			<div>
+				<p>{{post.createdAt|format_datetime(locale='fr')}}</p>
+			</div>
+		</body>
+	</body>
+</html>
