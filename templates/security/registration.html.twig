@@ -1,0 +1,18 @@
+{% extends "base.html.twig" %}
+{% block title %}Registration
+{% endblock %}
+{% block body %}
+	{% for message in app.flashes('error') %}
+		<div class="flex justify-center items-center p-8 bg-gray-100">
+			{{message}}
+		</div>
+	{% endfor %}
+	{{ form_start(form)}}
+	{{ form_row(form.name) }}
+	{{ form_row(form.email) }}
+	{{ form_row(form.password) }}
+	{{ form_row(form.confirmedPassword) }}
+	<button type="submit" class="text-sm text-white bg-gray-800 rounded-lg p-2">sub</button>
+	{{ form_end(form)}}
+
+{% endblock %}

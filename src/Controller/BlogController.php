@@ -2,11 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Post;
+use App\Form\CommentType;
 use App\Form\PostType;
 use App\Repository\PostRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use PhpParser\Node\Stmt\TryCatch;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -86,9 +90,59 @@ class BlogController extends AbstractController
     /**
      * @Route("/blog/{id}", name="blog_show")
      */
-    public function show(Post $post){
+    public function show(Post $post, Request $req, EntityManagerInterface $em){
+
+        $comment = new Comment;
+        $formComment = $this->createForm(CommentType::class, $comment);
+        $formComment->handleRequest($req);
+        
+        if($formComment->isSubmitted() && $formComment->isValid()){
+            $comment
+                ->setPost($post)
+                ->setCreateAt(new DateTime());
+            $em->persist($comment);
+            $em->flush();
+            $this->addFlash('success', 'Thank you for your comment');
+            return $this->redirectToRoute('blog_show', [
+                'id' => $post->getId()
+            ]);
+        }
+
+
         return $this->render('blog/show.html.twig', [
+            'post' => $post,
+            'form' => $formComment->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/pdf/{id}", name="edit_pdf")
+     */
+    public function editPdf(Post $post){
+        $pdfOption = new Options();
+
+        $pdf = new Dompdf($pdfOption);
+
+        $pdfOption
+            ->setIsHtml5ParserEnabled(true)
+            ->setDefaultFont('Arial');
+
+        $html = $this->renderView('pdf/postPdf.html.twig', [
             'post' => $post
+        ]);
+
+        $pdf->loadHtml($html);
+
+        $pdf->setPaper('A4', 'portrait');
+
+        $pdf->render();
+
+        $pdf->stream('post.pdf', [
+            'Attachment' => false
+        ]);
+
+        return new Response('', 200, [
+            'Content-Type' => 'application/pdf'
         ]);
     }
 }

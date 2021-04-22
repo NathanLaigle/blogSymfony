@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Category;
 use App\Entity\Post;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
@@ -16,6 +18,10 @@ class PostType extends AbstractType
         $builder
             ->add('title')
             ->add('content')
+            ->add('category', EntityType::class, [
+                "class" => Category::class,
+                "choice_label" => "title"
+            ])
             ->add('image', FileType::class, [
                 'mapped' => true,
                 'required' => true,
